@@ -71,9 +71,17 @@ const updateTodo = async (req, res) => {
         return
     }
 
+    // Verifies an item with the passed id exists
+    let query_parameters = [req.body.id]
+    let database_response = await database_pool.query("SELECT id FROM todos WHERE id = $1;", query_parameters)
+    if (database_response.rowCount === 0) {
+        sendNotFound(res, `No item found with an ID of ${req.body.id}`)
+        return
+    }
+
     // Updates the todo item
-    const query_parameters = [req.body.task, req.body.is_finished, req.body.id]
-    const database_response = await database_pool.query("UPDATE todos SET task = $1, is_finished = $2 WHERE id = $3 RETURNING *;", query_parameters)
+    query_parameters = [req.body.task, req.body.is_finished, req.body.id]
+    database_response = await database_pool.query("UPDATE todos SET task = $1, is_finished = $2 WHERE id = $3 RETURNING *;", query_parameters)
 
     // If a todo item was indeed updated, send the updated item with a 200 OK status code
     if (database_response.rowCount === 1) {
@@ -100,9 +108,17 @@ const deleteTodo = async (req, res) => {
         return
     }
 
+    // Verifies an item with the passed id exists
+    let query_parameters = [req.body.id]
+    let database_response = await database_pool.query("SELECT id FROM todos WHERE id = $1;", query_parameters)
+    if (database_response.rowCount === 0) {
+        sendNotFound(res, `No item found with an ID of ${req.body.id}`)
+        return
+    }
+
     // Delets the todo item
-    const query_parameters = [req.body.id]
-    const database_response = await database_pool.query("DELETE FROM todos WHERE id = $1 RETURNING *;", query_parameters)
+    query_parameters = [req.body.id]
+    database_response = await database_pool.query("DELETE FROM todos WHERE id = $1 RETURNING *;", query_parameters)
 
     // If a todo item was indeed deleted, send a 204 No Content response
     if (database_response.rowCount === 1) {
@@ -120,6 +136,12 @@ const deleteTodo = async (req, res) => {
 // When this function is called, return a 400 Bad Request response
 const sendBadRequest = (res, errorMessage = "Bad Request") => {
     res.status(400)
+    res.send(errorMessage)
+}
+
+// When this function is called, return a 404 Not Found response
+const sendNotFound = (res, errorMessage = "Not Found") => {
+    res.status(404)
     res.send(errorMessage)
 }
 
