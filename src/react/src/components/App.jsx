@@ -20,7 +20,7 @@ const App = () => {
 
         fetchTodoItems()
 
-    }, [todoItems])
+    }, [])
 
     if (isLoading) {
         return <Loading />
