@@ -4,10 +4,12 @@ import database_pool from "../database/database.js"
 // Route for creating a new todo item
 const createTodo = async (req, res) => {
 
-    // Verifies a task was sent in the request body
-    if (typeof req.body.task !== "string") {
-        res.status(400)
-        res.send()
+    // Verifies an task was sent in the request body and is of the type string
+    if (req.body.task === undefined) {
+        sendBadRequest(res, "Missing required parameter: 'task' of type string")
+        return
+    } else if (typeof req.body.task !== "string") {
+        sendBadRequest(res, `Parameter 'task' should be of type string, received ${typeof req.body.task} instead`)
         return
     }
 
@@ -42,24 +44,30 @@ const readTodos = async (req, res) => {
 // Route for updating a todo item
 const updateTodo = async (req, res) => {
 
-    // Verifies an id was sent in the request body
-    if (typeof req.body.id !== "number") {
-        res.status(400)
-        res.send()
+    // Verifies an id was sent in the request body and is of the type number
+    if (req.body.id === undefined) {
+        sendBadRequest(res, "Missing required parameter: 'id' of type number")
+        return
+    } else if (typeof req.body.id !== "number") {
+        sendBadRequest(res, `Parameter 'id' should be of type number, received ${typeof req.body.id} instead`)
         return
     }
 
-    // Verifies a task was sent in the request body
-    if (typeof req.body.task !== "string") {
-        res.status(400)
-        res.send()
+    // Verifies an task was sent in the request body and is of the type string
+    if (req.body.task === undefined) {
+        sendBadRequest(res, "Missing required parameter: 'task' of type string")
+        return
+    } else if (typeof req.body.task !== "string") {
+        sendBadRequest(res, `Parameter 'task' should be of type string, received ${typeof req.body.task} instead`)
         return
     }
 
-    // Verifies a finished status was sent in the request body
-    if (typeof req.body.is_finished !== "boolean") {
-        res.status(400)
-        res.send()
+    // Verifies an is_finished status was sent in the request body and is of the type boolean
+    if (req.body.is_finished === undefined) {
+        sendBadRequest(res, "Missing required parameter: 'is_finished' of type boolean")
+        return
+    } else if (typeof req.body.is_finished !== "boolean") {
+        sendBadRequest(res, `Parameter 'is_finished' should be of type boolean, received ${typeof req.body.is_finished} instead`)
         return
     }
 
@@ -83,10 +91,12 @@ const updateTodo = async (req, res) => {
 // Route for deleting a todo item
 const deleteTodo = async (req, res) => {
 
-    // Verifies an id was sent in the request body
-    if (typeof req.body.id !== "number") {
-        res.status(400)
-        res.send()
+    // Verifies an id was sent in the request body and is of the type number
+    if (req.body.id === undefined) {
+        sendBadRequest(res, "Missing required parameter: 'id' of type number")
+        return
+    } else if (typeof req.body.id !== "number") {
+        sendBadRequest(res, `Parameter 'id' should be of type number, received ${typeof req.body.id} instead`)
         return
     }
 
@@ -105,6 +115,12 @@ const deleteTodo = async (req, res) => {
         res.status(400)
         res.send()
     }
+}
+
+// When this function is called, return a 400 Bad Request response
+const sendBadRequest = (res, errorMessage = "Bad Request") => {
+    res.status(400)
+    res.send(errorMessage)
 }
 
 // When this module is imported and invoked, add the server's routes
