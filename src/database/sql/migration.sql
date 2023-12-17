@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS todos;
+CREATE TABLE todos (
+    id SERIAL PRIMARY KEY NOT NULL,
+    task VARCHAR(255) NOT NULL,
+    is_finished BOOLEAN NOT NUll
+);
