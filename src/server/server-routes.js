@@ -71,6 +71,12 @@ const updateTodo = async (req, res) => {
         return
     }
 
+    // Verifies the passed id is not out of range for the id BIGSERIAL column
+    if (req.body.id < 1 || req.body.id > Math.pow(2, 63)) {
+        sendNotFound(res, `No item found with an ID of ${req.body.id}`)
+        return
+    }
+
     // Verifies an item with the passed id exists
     let query_parameters = [req.body.id]
     let database_response = await database_pool.query("SELECT id FROM todos WHERE id = $1;", query_parameters)
@@ -105,6 +111,12 @@ const deleteTodo = async (req, res) => {
         return
     } else if (typeof req.body.id !== "number") {
         sendBadRequest(res, `Parameter 'id' should be of type number, received ${typeof req.body.id} instead`)
+        return
+    }
+
+    // Verifies the passed id is not out of range for the id BIGSERIAL column
+    if (req.body.id < 1 || req.body.id > Math.pow(2, 63)) {
+        sendNotFound(res, `No item found with an ID of ${req.body.id}`)
         return
     }
 
