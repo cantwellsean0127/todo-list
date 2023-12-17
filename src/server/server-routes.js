@@ -4,6 +4,13 @@ import database_pool from "../database/database.js"
 // Route for creating a new todo item
 const createTodo = async (req, res) => {
 
+    // Verifies a task was sent in the request body
+    if (typeof req.body.task !== "string") {
+        res.status(400)
+        res.send()
+        return
+    }
+
     // Inserts the new todo item into the database
     const query_parameters = [req.body.task]
     const database_response = await database_pool.query("INSERT INTO todos (task, is_finished) VALUES ($1, FALSE) RETURNING *;", query_parameters)
@@ -35,6 +42,27 @@ const readTodos = async (req, res) => {
 // Route for updating a todo item
 const updateTodo = async (req, res) => {
 
+    // Verifies an id was sent in the request body
+    if (typeof req.body.id !== "number") {
+        res.status(400)
+        res.send()
+        return
+    }
+
+    // Verifies a task was sent in the request body
+    if (typeof req.body.task !== "string") {
+        res.status(400)
+        res.send()
+        return
+    }
+
+    // Verifies a finished status was sent in the request body
+    if (typeof req.body.is_finished !== "boolean") {
+        res.status(400)
+        res.send()
+        return
+    }
+
     // Updates the todo item
     const query_parameters = [req.body.task, req.body.is_finished, req.body.id]
     const database_response = await database_pool.query("UPDATE todos SET task = $1, is_finished = $2 WHERE id = $3 RETURNING *;", query_parameters)
@@ -54,6 +82,13 @@ const updateTodo = async (req, res) => {
 
 // Route for deleting a todo item
 const deleteTodo = async (req, res) => {
+
+    // Verifies an id was sent in the request body
+    if (typeof req.body.id !== "number") {
+        res.status(400)
+        res.send()
+        return
+    }
 
     // Delets the todo item
     const query_parameters = [req.body.id]
