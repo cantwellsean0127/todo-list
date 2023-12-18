@@ -8,6 +8,7 @@ const App = () => {
 
     const [isLoading, setIsLoading] = useState(true)
     const [todoItems, setTodoItems] = useState([])
+    const [triggerReload, setTriggerReload] = useState(false)
 
     useEffect(() => {
 
@@ -28,8 +29,13 @@ const App = () => {
 
     else {
 
+        const performReload = () => {
+            setTriggerReload(!triggerReload)
+        }
+
         const createTodoItem = (todoItem) => {
             setTodoItems([todoItem].concat(todoItems))
+            performReload()
         }
 
         const updateTodoItem = (id, newTodoItem) => {
@@ -37,6 +43,7 @@ const App = () => {
             const todoItemIndex = todoItems.indexOf(todoItem)
             todoItems[todoItemIndex] = newTodoItem
             setTodoItems(todoItems)
+            performReload()
         }
 
         const deleteTodoItem = (id) => {
@@ -45,6 +52,7 @@ const App = () => {
             const leftSide = todoItems.slice(0, todoItemIndex)
             const rightSide = todoItems.slice(todoItemIndex + 1)
             setTodoItems(leftSide.concat(rightSide))
+            performReload()
         }
 
         return (
