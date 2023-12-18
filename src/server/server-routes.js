@@ -20,6 +20,7 @@ const createTodo = async (req, res) => {
     // If a todo item was indeed inserted, send the created todo item with a 201 Created status code
     if (database_response.rowCount === 1) {
         res.status(201)
+        database_response.rows[0].id = parseInt(database_response.rows[0].id)
         res.send(database_response.rows[0])
     }
 
@@ -38,6 +39,9 @@ const readTodos = async (req, res) => {
 
     // Sends the items
     res.status(200)
+    for (const todoItem of database_response.rows) {
+        todoItem.id = parseInt(todoItem.id)
+    }
     res.send(database_response.rows)
 }
 
@@ -92,6 +96,7 @@ const updateTodo = async (req, res) => {
     // If a todo item was indeed updated, send the updated item with a 200 OK status code
     if (database_response.rowCount === 1) {
         res.status(200)
+        database_response.rows[0].id = parseInt(database_response.rows[0].id)
         res.send(database_response.rows[0])
     }
 
